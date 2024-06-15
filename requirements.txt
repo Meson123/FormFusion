@@ -1,1 +1,5 @@
-
+# Requirements for OrganisationAgent
+In order to run the class OrganisationAgent and all its associated functionality, kindly ensure that the following dependencies are installed:
+<br/>
+uagents: Unified Agents library for creating and managing agents and protocols.
+Install via: 'pip install uagents'
