@@ -25,3 +25,6 @@ Stores the name of the organisation for the form, and is a key.
 
 4. fields <br/>
 Stores the fields of the form, and is a key.
+
+# Checkpoint 2
+Folders: agents, protocols
