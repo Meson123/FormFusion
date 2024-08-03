@@ -28,3 +28,11 @@ Stores the fields of the form, and is a key.
 
 # Checkpoint 2
 Folders: agents, protocols
+# Issue: Form Submission Data Storage Issue
+## Steps Involved
+1. Agent Definition: We have created an agent called user with the specified parameters.
+2. Funding: The agent's wallet is funded if it has a low balance so that it is ensured that it can perform the required actions
+3. Protocols: used to handle query and submission related tasks.
+4. Defining the form: a dictionary named FORMS is created and stored in the agent's local storage, and run if the script is executed directly.
+5. 
+
