@@ -1,69 +1,80 @@
+import json
 from uagents import Agent, Context
 from uagents.setup import fund_agent_if_low
-from protocols.submission import SubmitFormRequest, SubmitFormResponse
-from protocols.query import QueryFormRequest, QueryFormResponse, FormStatus, GetTotalQueries, TotalQueries
+from protocols.submission import submit_proto
+from protocols.query import query_proto, FormStatus
 
-# Organisation agent address
-ORGANISATION_ADDRESS = "agent1qw50wcs4nd723ya9j8mwxglnhs2kzzhh0et0yl34vr75hualsyqvqdzl990"
+class OrganizationAgent:
+    def __init__(self):
+        self.forms = {}
+        self.agent = Agent(
+            name="organisation",
+            port=2257,  # Ensure this port is not used by any other process
+            seed="org secret phrase",
+            endpoint=["http://127.0.0.1:2257/submit"],
+        )
+        print("Initializing agent...")
+        fund_agent_if_low(self.agent.wallet.address())
+        self.agent.include(query_proto)
+        self.agent.include(submit_proto)
+        print("Agent initialized and protocols included.")
 
-# Create an agent named "user" on port 8000 with a specific seed phrase
-user = Agent(
-    name="user",
-    port=8000,
-    seed="user secret phrase",
-    endpoint=["http://127.0.0.1:8000/submit"],
-)
+    def add_form(self, form_title, description, organizing_body, fields):
+        form_status = FormStatus(
+            body=description,
+            title=form_title,
+            description=description,
+            fields=fields
+        ).dict()
+        self.forms[form_title] = form_status
 
-# Fund the agent's wallet if the balance is low
-fund_agent_if_low(user.wallet.address())
+        try:
+            print(f"Attempting to save form '{form_title}'...")
+            self.agent._storage.set(form_title, form_status)
+            print(f"Form '{form_title}' saved successfully.")
+        except Exception as e:
+            print(f"Error saving form data: {e}")
 
-# Define the form query request
-form_query = QueryFormRequest(
-    body="Please provide the form details",
-    title="Internship Session",
-)
+    def get_form_description(self, form_title):
+        form = self.forms.get(form_title)
+        if form:
+            return form.get("description", "Description not available.")
+        return "Form not found."
 
-# Function to submit the form once the form details are received
-async def submit_form(ctx: Context, form_details: FormStatus):
-    form_data = SubmitFormRequest(
-        title=form_details.title,
-        fields=["John Doe", "john@example.com", "123-456-7890", "Resume content here"]
-    )
-    await ctx.send(ORGANISATION_ADDRESS, form_data)
+    def get_form_fields(self, form_title):
+        form = self.forms.get(form_title)
+        if form:
+            return form.get("fields", "Fields not available.")
+        return "Form not found."
 
-# Handle query form response
-@user.on_message(QueryFormResponse)
-async def handle_query_response(ctx: Context, sender: str, msg: QueryFormResponse):
-    if msg.forms:
-        print(f"Received form details: {msg.forms}")
-        await submit_form(ctx, msg.forms)
-    else:
-        print("Form not found")
+    def get_form_organization(self, form_title):
+        form = self.forms.get(form_title)
+        if form:
+            return form.get("organization", "Organization not specified.")
+        return "Form not found."
 
-# Handle form submission response
-@user.on_message(SubmitFormResponse)
-async def handle_submit_response(ctx: Context, sender: str, msg: SubmitFormResponse):
-    if msg.success:
-        print("Form submitted successfully")
-    else:
-        print("Form submission failed")
+    def prompt_user_for_form(self):
+        user_input = input("Would you like to create a new form? (yes/no): ").strip().lower()
+        if user_input == 'yes':
+            form_title = input("Please enter the form title: ").strip()
+            description = input("Please provide the description of the form: ").strip()
+            organizing_body = input("Please enter the organizing body: ").strip()
+            fields = input("Please enter the fields required (comma separated): ").strip().split(',')
 
-# Handle total queries response
-@user.on_message(TotalQueries)
-async def handle_total_queries(ctx: Context, sender: str, msg: TotalQueries):
-    print(f"Total queries made: {msg.total_queries}")
+            self.add_form(form_title, description, organizing_body, fields)
 
-# Periodically send a form query request
-@user.on_interval(period=5.0, messages=QueryFormRequest)
-async def interval(ctx: Context):
-    completed = ctx.storage.get("completed")
-    if not completed:
-        await ctx.send(ORGANISATION_ADDRESS, form_query)
+            print("\nForm Created:")
+            print(f"Title: {form_title}")
+            print(f"Description: {description}")
+            print("Fields required: ", ", ".join(fields))
+            print("Please provide your name, roll no, and contact department.")
+        else:
+            print("No form created.")
 
-# Query total queries made
-async def query_total_queries(ctx: Context):
-    await ctx.send(ORGANISATION_ADDRESS, GetTotalQueries())
-
-# Run the agent
+# Example usage
 if __name__ == "__main__":
-    user.run()
+    print("Starting OrganizationAgent...")
+    agent = OrganizationAgent()
+    agent.prompt_user_for_form()
+    print("Running agent...")
+    agent.agent.run()
