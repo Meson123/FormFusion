@@ -26,13 +26,39 @@ Stores the name of the organisation for the form, and is a key.
 4. fields <br/>
 Stores the fields of the form, and is a key.
 
-# Checkpoint 2
+# Checkpoint 2: Implementing and Testing the Organization and User Agents
 Folders: agents, protocols
-# Issue: Form Submission Data Storage Issue
-## Steps Involved
-1. Agent Definition: We have created an agent called user with the specified parameters.
-2. Funding: The agent's wallet is funded if it has a low balance so that it is ensured that it can perform the required actions
-3. Protocols: used to handle query and submission related tasks.
-4. Defining the form: a dictionary named FORMS is created and stored in the agent's local storage, and run if the script is executed directly.
-5. 
+## Overview
 
+This project involves the implementation and testing of two intelligent agents: `organisation.py` and `user.py`. The `organisation.py` agent is responsible for handling and processing various forms, while the `user.py` agent interacts with it to query and submit forms. In this checkpoint, we focus on managing restaurant reservations, including both initial bookings and modifications.
+
+## Components
+
+### 1. `organisation.py`
+
+The `organisation.py` script serves as the backend service that manages forms. It handles queries from the `user.py` agent and provides form details, including the fields that need to be filled out.
+
+**Key Features:**
+- Provides descriptions of available forms.
+- Lists required fields for each form.
+- Handles and responds to form queries from `user.py`.
+
+### 2. `user.py`
+
+The `user.py` script is the client-side agent that interacts with `organisation.py`. It queries form details, collects input from the user, and submits the filled form back to the `organisation.py` agent.
+
+**Key Features:**
+- Sends queries to the `organisation.py` agent to retrieve form details.
+- Submits completed forms to the `organisation.py` agent.
+- Receives and handles responses indicating the success or failure of the submission.
+
+### 3. Protocol Definitions
+
+Two protocol files, `submission.py` and `query.py`, define the communication between `organisation.py` and `user.py`.
+
+- **`submission.py`**: Defines the structure of form submission requests and responses.
+- **`query.py`**: Defines the structure of form query requests and responses.
+
+### 4. JSON Configuration
+
+A JSON file is used to define the details of the forms managed by `organisation.py`. This file includes the form title, description, and a list of fields that users need to fill out, such as name, email, reservation date, and more.
