@@ -38,9 +38,10 @@ class OrganizationAgent:
             self.add_form(form_title, description, organizing_body, fields)
 
             print("\nHi..")
-            print(f"Here's a form for the {form_title} domain..")
+            print(f"Here's a form for the {form_title} domain by {organizing_body}")
             print(f"{description}")
-            print("Kindly provide your name, roll no, contact department.")
+            print("Kindly provide your {fields}.")
+
         else:
             print("No form created.")
 
