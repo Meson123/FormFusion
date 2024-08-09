@@ -1,0 +1,76 @@
+  {
+    "1": {
+        "body": "This is a restaurant reservation form",
+        "title": "Restaurant Reservation",
+        "description": "Form to book a table at the restaurant",
+        "fields": [
+            {
+                "name": "Full Name",
+                "required": true,
+                "data_type": "string"
+            },
+            {
+                "name": "Email",
+                "required": true,
+                "data_type": "string"
+            },
+            {
+                "name": "Phone",
+                "required": true,
+                "data_type": "string"
+            },
+            {
+                "name": "Reservation Date",
+                "required": true,
+                "data_type": "date"
+            },
+            {
+                "name": "Reservation Time",
+                "required": true,
+                "data_type": "time"
+            },
+            {
+                "name": "Number of People",
+                "required": true,
+                "data_type": "integer"
+            },
+            {
+                "name": "Special Requests",
+                "required": false,
+                "data_type": "text"
+            }
+        ]
+    },
+    "2": {
+        "body": "This is a restaurant reservation modification form",
+        "title": "Reservation Modification",
+        "description": "Form to modify an existing restaurant reservation",
+        "fields": [
+            {
+                "name": "Reservation ID",
+                "required": true,
+                "data_type": "string"
+            },
+            {
+                "name": "New Reservation Date",
+                "required": false,
+                "data_type": "date"
+            },
+            {
+                "name": "New Reservation Time",
+                "required": false,
+                "data_type": "time"
+            },
+            {
+                "name": "New Number of People",
+                "required": false,
+                "data_type": "integer"
+            },
+            {
+                "name": "Additional Special Requests",
+                "required": false,
+                "data_type": "text"
+            }
+        ]
+    }
+}
