@@ -40,7 +40,7 @@ class OrganizationAgent:
             print("\nHi..")
             print(f"Here's a form for the {form_title} domain by {organizing_body}")
             print(f"{description}")
-            print("Kindly provide your {fields}.")
+            print("Kindly provide your " + ", ".join(fields) + ".")
 
         else:
             print("No form created.")
